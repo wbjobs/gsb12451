@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG 图标多浏览器兼容方案</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="page-header">
+  <h1>SVG 图标多浏览器兼容方案</h1>
+  <p>三种来源（内联 / sprite / 外部文件）× 三种方式（use 外部引用 / symbol 引用 / 直接内联），自动检测、自动降级、结果一致。</p>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="panel-head">
+      <h2>① 能力检测</h2>
+      <button id="btn-detect" class="btn">重新检测</button>
+    </div>
+    <p class="hint">检测结论会经过真实渲染验证自动修正；也可用下拉框人工覆盖（用于模拟老浏览器，观察降级效果）。</p>
+    <table class="table">
+      <thead><tr><th>能力</th><th>状态</th><th>检测耗时</th><th>备注</th><th>覆盖</th></tr></thead>
+      <tbody id="caps-body"></tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>② 图标来源</h2>
+      <div>
+        <button id="btn-load-all" class="btn">加载全部来源</button>
+        <button id="btn-clear-cache" class="btn btn-ghost">清空缓存</button>
+      </div>
+    </div>
+    <div class="src-grid">
+      <div class="src-card" id="src-inline">
+        <h3>内联源</h3>
+        <p class="src-desc">JS 内置数据，直接注入 &lt;symbol&gt;</p>
+        <p>状态：<span class="src-status tag tag-muted">未加载</span></p>
+        <p>耗时：<span class="src-time">—</span></p>
+        <p class="src-detail"></p>
+        <button class="btn" data-load="inline">加载</button>
+      </div>
+      <div class="src-card" id="src-sprite">
+        <h3>Sprite 源</h3>
+        <p class="src-desc">Worker 加载 sprite.svg，IndexedDB 缓存</p>
+        <p>状态：<span class="src-status tag tag-muted">未加载</span></p>
+        <p>耗时：<span class="src-time">—</span></p>
+        <p class="src-detail"></p>
+        <button class="btn" data-load="sprite">加载</button>
+      </div>
+      <div class="src-card" id="src-external">
+        <h3>外部文件源</h3>
+        <p class="src-desc">不加载文件，仅检测外部引用可用性</p>
+        <p>状态：<span class="src-status tag tag-muted">未加载</span></p>
+        <p>耗时：<span class="src-time">—</span></p>
+        <p class="src-detail"></p>
+        <button class="btn" data-load="external">检测</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>③ 渲染矩阵 <small id="matrix-icon-name"></small></h2>
+    </div>
+    <p class="hint">对当前选中图标分别尝试三种方式，展示实际使用的方式、渲染耗时与降级原因。</p>
+    <table class="table">
+      <thead><tr><th>渲染</th><th>请求方式</th><th>实际方式</th><th>构建耗时</th><th>降级原因</th></tr></thead>
+      <tbody id="matrix-body"></tbody>
+    </table>
+    <p id="consistency-result" class="consistency"></p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>④ 图标库</h2>
+      <span id="grid-method" class="hint"></span>
+    </div>
+    <div class="toolbar">
+      <input id="icon-search" type="search" placeholder="搜索图标（名称或 id）…">
+      <div id="category-chips" class="chips"></div>
+      <span id="icon-count" class="hint"></span>
+    </div>
+    <div id="icon-grid" class="icon-grid"></div>
+    <div class="missing-test">
+      <input id="missing-input" type="text" placeholder="输入不存在的图标 id，如 not-exist">
+      <button id="btn-missing" class="btn">测试缺失图标</button>
+      <span id="missing-result"></span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>⑤ 运行日志</h2></div>
+    <ul id="log-list" class="log-list"></ul>
+  </section>
+</main>
+
+<script src="js/icons-data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/detect.js"></script>
+<script src="js/icon-runtime.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
