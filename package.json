@@ -1,0 +1,11 @@
+{
+  "name": "svg-icon-compat-lab",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build:sprite": "node tools/build-sprite.mjs",
+    "test": "node tools/smoke-test.mjs",
+    "serve": "python3 -m http.server 8080"
+  }
+}

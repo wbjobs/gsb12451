@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG 图标多浏览器兼容性实验室</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="header">
+  <h1>SVG 图标兼容性实验室</h1>
+  <p class="muted">三种来源（内联 / sprite / 外部文件）× 三种方式（symbol 引用 / 外部引用 / 直接内联），自动检测、自动降级、结果校验。纯原生 SVG + DOM + Fetch + CSSOM + IndexedDB + Web Worker。</p>
+</header>
+
+<main class="layout">
+  <section class="panel">
+    <h2>① 浏览器支持性检测</h2>
+    <table class="support-table" id="support-list"></table>
+    <div class="row">
+      <button id="btn-redetect" type="button">重新检测</button>
+    </div>
+    <h3>误判修正记录</h3>
+    <ul class="corrections" id="corrections-list"></ul>
+  </section>
+
+  <section class="panel">
+    <h2>② 异常模拟（验证降级链路）</h2>
+    <label class="check"><input type="checkbox" id="sim-external"> 外部引用被禁用（external → symbol → inline）</label>
+    <label class="check"><input type="checkbox" id="sim-sprite-fail"> sprite 加载失败（sprite 源 → 内联数据源）</label>
+    <label class="check"><input type="checkbox" id="sim-symbol"> symbol 不被支持（symbol → inline）</label>
+    <label class="check"><input type="checkbox" id="sim-misdetect"> 注入检测误判（强制声称支持，验证修正机制）</label>
+  </section>
+
+  <section class="panel panel--wide">
+    <h2>③ 图标浏览</h2>
+    <div class="controls">
+      <label>来源
+        <select id="sel-source">
+          <option value="inline">内联数据</option>
+          <option value="sprite" selected>sprite（fetch + 注入）</option>
+          <option value="external">外部文件</option>
+        </select>
+      </label>
+      <label>方式
+        <select id="sel-method">
+          <option value="auto" selected>自动选择</option>
+          <option value="symbol">symbol 引用（use → #id）</option>
+          <option value="external">外部引用（use → sprite.svg#id）</option>
+          <option value="inline">直接内联</option>
+        </select>
+      </label>
+      <label>颜色 <input type="color" id="inp-color" value="#1f6feb"></label>
+      <label>尺寸 <input type="range" id="inp-size" min="16" max="64" value="32"> <span id="size-val">32px</span></label>
+      <label class="grow">搜索 <input type="search" id="inp-search" placeholder="按名称 / id / 关键词搜索…"></label>
+    </div>
+    <div class="tabs" id="category-tabs"></div>
+    <p class="muted" id="source-info"></p>
+    <p class="muted"><span id="grid-count"></span>，徽标含义：<code>symbol/external/inline · 耗时</code>；<span class="badge--fallback">⚠</span> 表示发生降级（悬停查看原因）。</p>
+    <div class="grid" id="icon-grid"></div>
+  </section>
+
+  <section class="panel panel--wide">
+    <h2>④ <span id="compare-title">方式对比</span></h2>
+    <p class="muted">同一图标用三种方式渲染，校验颜色继承（currentColor）与尺寸继承（1em）是否一致。点击上方图标切换。</p>
+    <div class="compare" id="compare-body"></div>
+    <p id="compare-summary"></p>
+  </section>
+
+  <section class="panel panel--wide">
+    <h2>⑤ 运行日志（加载耗时 / 降级原因 / 缺失提示）</h2>
+    <ul class="logs" id="log-list"></ul>
+  </section>
+</main>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
